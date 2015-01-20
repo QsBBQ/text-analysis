@@ -38,6 +38,14 @@ def item_counts(array)
   counts # This returns the "counts" hash
 end
 
+def string_split(string)
+  string_split = string.split("")
+  results = item_counts(string_split)
+  puts results
+  return results
+end
+
+
 # "p" prints something to the screen in a way that's friendlier
 # for debugging purposes than print or puts.
 
@@ -47,7 +55,8 @@ p item_counts([]) == {}
 p item_counts(["hi", "hi", "hi"]) == {"hi" => 3}
 p item_counts([true, nil, "dinosaur"]) == {true => 1, nil => 1, "dinosaur" => 1}
 p item_counts(["a","a","A","A"]) == {"a" => 2, "A" => 2}
-
+p string_split("apple") == {"a" => 1, "p" => 2, "l" => 1, "e" => 1}
+p string_split("shark's") == {"s" => 2, "h" => 1, "a" => 1, "r" => 1, "k" => 1, "'" => 1}
 # Each of the lines above will print out "true" or "false" and collectively
 # act as a sanity check.  Remember that conceptually "x == y"
 # means "are x and y equal?"
