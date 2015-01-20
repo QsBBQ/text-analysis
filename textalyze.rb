@@ -24,13 +24,15 @@
 # in the input array.
 
 def item_counts(array)
-  counts = {} # Initialize counts to an empty Hash
+  #counts = {} # Initialize counts to an empty Hash
+  counts = Hash.new(0)  #This sets the the value to zero
 
   array.each do |item|
     # Add code here to modify the "counts" hash accordingly
     # You'll need to handle two cases:
     #   1. The first time we've seen a particular item in the array
     #   2. The second-or-later time we've seen a particular item in the array
+    counts[item] += 1
   end
 
   counts # This returns the "counts" hash
