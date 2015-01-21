@@ -39,10 +39,15 @@ def item_counts(array)
 end
 
 def string_split(string)
+  string = sanitize(string)
   string_split = string.split("")
   results = item_counts(string_split)
-  puts results
   return results
+end
+
+def sanitize(string)
+  sanitized = string.downcase
+  return sanitized
 end
 
 
@@ -57,6 +62,7 @@ p item_counts([true, nil, "dinosaur"]) == {true => 1, nil => 1, "dinosaur" => 1}
 p item_counts(["a","a","A","A"]) == {"a" => 2, "A" => 2}
 p string_split("apple") == {"a" => 1, "p" => 2, "l" => 1, "e" => 1}
 p string_split("shark's") == {"s" => 2, "h" => 1, "a" => 1, "r" => 1, "k" => 1, "'" => 1}
+p string_split("aAPplLeE") == {"a" => 2, "p" => 2, "l" => 2, "e" => 2}
 # Each of the lines above will print out "true" or "false" and collectively
 # act as a sanity check.  Remember that conceptually "x == y"
 # means "are x and y equal?"
