@@ -44,7 +44,7 @@ def string_split(string)
 end
 
 def sanitize(string)
-  sanitized = string.downcase
+  sanitized = string.downcase.scan(/[a-z]/)  #trying scan
   return sanitized
 end
 
@@ -52,9 +52,29 @@ def read_file(filename)
   begin
     file_contents = File.read(filename)
   rescue
-    puts "Error opening filename"
+    puts "Error opening file"
   end
   return file_contents
+end
+
+def freq_stat(hash)
+  total = 0.0
+  freq_hash = Hash.new(0)
+  hash.each do |k, v|
+    total += v
+  end
+  hash.each do |k, v|  #seems like extra work should come back to refactor
+    freq_hash[k] = v/total
+  end
+  return freq_hash
+end
+
+def histogram(hash)
+  sym = "="
+  hash.each do |k, v|
+    num_sym = sym * (v * 10).to_i
+    puts "#{k} #{v} #{num_sym}"
+  end
 end
 
 def prints_data()
@@ -63,11 +83,15 @@ def prints_data()
     puts "ruby textalyze.rb yourfile.txt"
   end
   begin
-    string = read_file(ARGV[0])
-    arry = string_split(string)
-    results = item_counts(arry)
+    file_contents = read_file(ARGV[0])
+    #arry = string_split(file_contents)
+    arry = sanitize(file_contents)
+    results = freq_stat(item_counts(arry))
+    sym = "="
     results.each do |k, v|
-      puts "(Item): #{k} (Frequency): #{v}"
+      percent = '%.2f' % [(v*100).round(2)]
+      num_sym = sym * (percent * 10).to_i
+      puts "#{k} [ #{percent}%]   #{num_sym}"
     end
   rescue
     puts "Trouble in paradise"
@@ -75,6 +99,8 @@ def prints_data()
 end
 
 prints_data
+#p histogram({"a" => 0.25, "p" => 0.25, "l" => 0.25, "e" => 0.25})
+#p freq_stat({"a" => 2, "p" => 2, "l" => 2, "e" => 2}) == {"a" => 0.25, "p" => 0.25, "l" => 0.25, "e" => 0.25}
 #p prints_data("aAPplLeE") == {"a" => 2, "p" => 2, "l" => 2, "e" => 2}
 
 # "p" prints something to the screen in a way that's friendlier
