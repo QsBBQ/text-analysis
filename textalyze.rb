@@ -44,8 +44,7 @@ def string_split(string)
 end
 
 def sanitize(string)
-  #OK I need to santize more.. I have some ideas just need to get back to this
-  sanitized = string.downcase
+  sanitized = string.downcase.scan(/[a-z]/)  #trying scan
   return sanitized
 end
 
@@ -84,8 +83,9 @@ def prints_data()
     puts "ruby textalyze.rb yourfile.txt"
   end
   begin
-    string = read_file(ARGV[0])
-    arry = string_split(string)
+    file_contents = read_file(ARGV[0])
+    #arry = string_split(file_contents)
+    arry = sanitize(file_contents)
     results = freq_stat(item_counts(arry))
     sym = "="
     results.each do |k, v|
