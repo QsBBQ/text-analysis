@@ -23,79 +23,75 @@
 # In short, item_counts(array) tells us how many times each item appears
 # in the input array.
 
-def item_counts(array)
+def item_counts(words_array)
   #counts = {} # Initialize counts to an empty Hash
   counts = Hash.new(0)  #This sets the the value to zero
-
-  array.each do |item|
-    # Add code here to modify the "counts" hash accordingly
-    # You'll need to handle two cases:
-    #   1. The first time we've seen a particular item in the array
-    #   2. The second-or-later time we've seen a particular item in the array
+  #This counts the letters ot words from the array and creates a key value hash
+  words_array.each do |item|
     counts[item] += 1
   end
   return counts # This returns the "counts" hash
 end
 
 def string_split(string)
+  #Might get rid of this method.
   string = sanitize(string)
   string_split = string.split("")
   return string_split
 end
 
-def sanitize(string)
-  sanitized = string.downcase.scan(/[a-z]/)  #trying scan
-  return sanitized
+def words_array(words)
+  #thinking of changing this method name.
+  #letter_sanitized = string.downcase.scan(/[a-z]/)  #trying scan
+  words_array = words.downcase.scan(/\w+/)  #trying scan
+  return words_array  #Returns words as an array. Not sure if I still need letters.
 end
 
 def read_file(filename)
-  begin
-    file_contents = File.read(filename)
-  rescue
-    puts "Error opening file"
-  end
+  #This method reads the file
+  file_contents = File.read(filename)
   return file_contents
 end
 
-def freq_stat(hash)
-  total = 0.0
-  freq_hash = Hash.new(0)
-  hash.each do |k, v|
-    total += v
+def freq_stat(words_hash)
+  total_words = 0.0
+  percent_hash = Hash.new(0)
+  words_hash.each do |word, frequency|
+    total_words += frequency
   end
-  hash.each do |k, v|  #seems like extra work should come back to refactor
-    freq_hash[k] = v/total
+  words_hash.each do |word, frequency|
+    percent_hash[word] = '%.2f' % [((frequency/total_words)*100).round(2)]
   end
-  return freq_hash
+  return percent_hash
 end
 
-def histogram(hash)
+def histogram(words_percentage)
+  #Filler character
   sym = "="
-  hash.each do |k, v|
-    num_sym = sym * (v * 10).to_i
-    puts "#{k} #{v} #{num_sym}"
+  #Iterate over the hash and print the word and percent to the screen.
+  #The word frequency appears a lot smaller might adjust bucket for filler.
+  words_percentage.each do |word, percent|
+    num_sym = sym * (percent * 10).to_i
+    puts "#{word} [ #{percent}%]   #{num_sym}"
   end
 end
 
 def prints_data()
+  #struggling a bit with what to name things is there a practice or rule to try and follow?
+  #I was a little confused how to handle words and letters or if that was needed.
   if ARGV.size == 0
     puts "Input a filename!. Try again!"
     puts "ruby textalyze.rb yourfile.txt"
   end
-  begin
-    file_contents = read_file(ARGV[0])
-    #arry = string_split(file_contents)
-    arry = sanitize(file_contents)
-    results = freq_stat(item_counts(arry))
-    sym = "="
-    results.each do |k, v|
-      percent = '%.2f' % [(v*100).round(2)]
-      num_sym = sym * (percent * 10).to_i
-      puts "#{k} [ #{percent}%]   #{num_sym}"
-    end
-  rescue
-    puts "Trouble in paradise"
-  end
+  #Read file specified in ARGV as a sting
+  file_contents = read_file(ARGV[0])
+  #arry = string_split(file_contents)
+  #normalizes words and creates an array of words
+  words_array = words_array(file_contents)
+  #Counts the array of words and finds the frequency percentage that the word is used.
+  words_percentage = freq_stat(item_counts(words_array))
+  #Calls the histogram method and prints the output with a filler character
+  print_histogram = histogram(words_percentage)
 end
 
 prints_data
