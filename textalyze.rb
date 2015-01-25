@@ -23,6 +23,9 @@
 # In short, item_counts(array) tells us how many times each item appears
 # in the input array.
 
+require 'open-uri'
+require 'nokogiri'
+
 def item_counts(words_array)
   #counts = {} # Initialize counts to an empty Hash
   counts = Hash.new(0)  #This sets the the value to zero
@@ -76,25 +79,35 @@ def histogram(words_percentage)
   end
 end
 
+def url_download(url = "http://www.gutenberg.org/files/2701/2701-h/2701-h.htm")
+  page = Nokogiri::HTML(open(url))
+  paragraphs = page.css('p')
+  return paragraphs.text
+end
+
 def prints_data()
   #struggling a bit with what to name things is there a practice or rule to try and follow?
   #I was a little confused how to handle words and letters or if that was needed.
-  if ARGV.size == 0
-    puts "Input a filename!. Try again!"
-    puts "ruby textalyze.rb yourfile.txt"
-  end
-  #Read file specified in ARGV as a sting
-  file_contents = read_file(ARGV[0])
+  # if ARGV.size == 0
+  #   puts "Input a filename!. Try again!"
+  #   puts "ruby textalyze.rb yourfile.txt"
+  # end
+  # #Read file specified in ARGV as a sting
+  # file_contents = read_file(ARGV[0])
   #arry = string_split(file_contents)
+  web_contents = url_download
   #normalizes words and creates an array of words
-  words_array = words_array(file_contents)
+  words_array = words_array(web_contents)
   #Counts the array of words and finds the frequency percentage that the word is used.
+  #Something isn't right my stats are all zero. Need to come back and fix.
   words_percentage = freq_stat(item_counts(words_array))
   #Calls the histogram method and prints the output with a filler character
   print_histogram = histogram(words_percentage)
 end
 
+#url_download
 prints_data
+
 #p histogram({"a" => 0.25, "p" => 0.25, "l" => 0.25, "e" => 0.25})
 #p freq_stat({"a" => 2, "p" => 2, "l" => 2, "e" => 2}) == {"a" => 0.25, "p" => 0.25, "l" => 0.25, "e" => 0.25}
 #p prints_data("aAPplLeE") == {"a" => 2, "p" => 2, "l" => 2, "e" => 2}
